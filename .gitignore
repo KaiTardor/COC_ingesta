@@ -6,3 +6,4 @@ cwl/
 wars/
 clan_example/
 export/
+.env

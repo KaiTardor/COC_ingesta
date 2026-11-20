@@ -1,0 +1,17 @@
+services:
+  n8n:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      TZ: Europe/Madrid
+      GENERIC_TIMEZONE: Europe/Madrid
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      NODES_EXCLUDE: '["n8n-nodes-base.localFileTrigger"]'
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - /mnt/c/Users/haowe/Desktop/COC:/data/coc:ro
+
+volumes:
+  n8n_data:
