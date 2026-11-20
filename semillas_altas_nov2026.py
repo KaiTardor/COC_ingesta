@@ -6,7 +6,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path('cwl_nov2026_def')
+ROOT = Path(__file__).resolve().parent / "cwl" / "cwl_nov2026_def"
 SEASON = '2026-11'
 RANKING = 'https://clashspot.net/en/rankings/clan-war-leagues/champion-clans/'
 
