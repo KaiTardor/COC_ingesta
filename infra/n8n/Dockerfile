@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION
+ARG ALPINE_VERSION=3.24
 FROM alpine:${ALPINE_VERSION} AS alpine_tools
 RUN apk add --no-cache apk-tools-static \
     && cp "$(command -v apk.static)" /tmp/apk.static
@@ -16,4 +16,11 @@ RUN printf '%s\n' \
       --repositories-file /tmp/coc-apk-repositories \
       add --no-cache python3 py3-requests \
     && rm -r /tmp/apk.static /tmp/coc-apk-keys /tmp/coc-apk-repositories
+RUN python3 -m venv --system-site-packages /opt/coc-python \
+    && SNOWFLAKE_DISABLE_COMPILE_ARROW_EXTENSIONS=1 \
+       /opt/coc-python/bin/python -m pip install --no-cache-dir \
+       "snowflake-connector-python==4.7.4" \
+    && /opt/coc-python/bin/python -c 'import requests, snowflake.connector'
+
+ENV PATH="/opt/coc-python/bin:${PATH}"
 USER node

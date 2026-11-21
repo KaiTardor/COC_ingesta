@@ -6,4 +6,4 @@ cwl/
 wars/
 clan_example/
 export/
-.env
+/infra/n8n/.env

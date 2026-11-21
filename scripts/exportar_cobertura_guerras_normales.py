@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from buscar_guerras_normales import lock_root, read_json
+from scripts.buscar_guerras_normales import lock_root, read_json
 
 
 def exportar(root, out):

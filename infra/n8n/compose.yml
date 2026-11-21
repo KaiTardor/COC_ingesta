@@ -9,6 +9,7 @@ services:
       GENERIC_TIMEZONE: Europe/Madrid
       N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
       NODES_EXCLUDE: '["n8n-nodes-base.localFileTrigger"]'
+      COC_API_TOKEN: "${COC_API_TOKEN}"
     volumes:
       - n8n_data:/home/node/.n8n
       - /mnt/c/Users/haowe/Desktop/COC:/data/coc:ro
