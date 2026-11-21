@@ -67,7 +67,7 @@ def load_file(cursor, stage, ledger, folder, manifest, name, table):
         print(f"Ya cargado: {key}")
         return
 
-    # Verifica que la copia que se subirá conserva el hash del manifiesto.
+    # Verifica que la copia local conserva el hash del manifiesto.
     with tempfile.TemporaryDirectory() as temp:
         snapshot = Path(temp) / name
         shutil.copyfile(folder / name, snapshot)
@@ -76,9 +76,11 @@ def load_file(cursor, stage, ledger, folder, manifest, name, table):
                 raise ValueError(f"El fichero cambió: {name}")
 
         path = f"@{stage}/{season}/{batch}/{expected['sha256']}"
+        staged_name = f"{name}.gz"
         if expected["rows"]:
             cursor.execute(
-                f"put 'file://{snapshot}' {path} auto_compress=false overwrite=false"
+                f"put 'file://{snapshot}' {path}/ "
+                "auto_compress=true overwrite=false"
             )
 
         cursor.execute("begin")
@@ -86,10 +88,16 @@ def load_file(cursor, stage, ledger, folder, manifest, name, table):
             if expected["rows"]:
                 cursor.execute(
                     f"copy into {table} (record) from (select $1 from {path}/) "
-                    f"files=('{name}') file_format=(type=json) on_error=abort_statement"
+                    f"files=('{staged_name}') "
+                    "file_format=(type=json compression=gzip) "
+                    "on_error=abort_statement"
                 )
                 result = cursor.fetchall()
-                if len(result) != 1 or result[0][1] != "LOADED" or result[0][3] != expected["rows"]:
+                if (
+                    len(result) != 1
+                    or result[0][1] != "LOADED"
+                    or result[0][3] != expected["rows"]
+                ):
                     raise ValueError(f"Comprobar COPY de {key}: {result}")
 
             cursor.execute(

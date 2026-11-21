@@ -95,8 +95,6 @@ def exportar(raiz, salida):
             if pendientes:
                 muestra = ", ".join(pendientes[:10])
                 raise ValueError(f"Quedan {len(pendientes)} clanes pendientes: {muestra}. Reanuda la descarga.")
-            if not perspectivas:
-                raise ValueError(f"No se recuperaron guerras normales de {mes}")
 
             temporal.close()
             ruta_temporal.replace(destino)
